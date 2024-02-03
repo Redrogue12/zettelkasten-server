@@ -1,11 +1,12 @@
+// db.js
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: 'Red',
   host: 'localhost',
-  database: 'zettelkasten-db',
+  user: 'Red',
   password: process.env.DB_PASSWORD,
-  port: 5433, // PostgreSQL default port
+  database: 'zettelkasten-db',
+  port: 5433
 });
 
 module.exports = pool;

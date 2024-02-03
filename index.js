@@ -1,19 +1,23 @@
+// index.js
 const express = require('express');
-const pool = require('./db'); // Adjust the path based on your project structure
+const routes = require('./routes');
+const pool = require('./db');
+const cors = require('cors');
 
 const app = express();
-const port = 3000;
 
-app.get('/notes', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM notes');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error executing query', error);
-    res.status(500).send('Internal Server Error');
-  }
+// Enable CORS for all routes
+app.use(cors());
+
+// Make pool accessible to our router
+app.use((req,res,next) => {
+  req.pool = pool;
+  next();
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// Use the routes
+app.use('/', routes);
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
