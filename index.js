@@ -1,6 +1,6 @@
 // index.js
 const express = require('express');
-const routes = require('./routes');
+const routes = require('./routes/notes');
 const pool = require('./db');
 const cors = require('cors');
 
@@ -18,6 +18,8 @@ app.use((req,res,next) => {
 // Use the routes
 app.use('/', routes);
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+
+module.exports = server;
