@@ -83,7 +83,7 @@ router.delete("/notes/:id", (req, res) => {
       } else if (results.rowCount === 0) {
         res.status(404).json({ message: "Note not found" });
       } else {
-        res.json({ message: "Note deleted" });
+        res.status(204).json({ message: "Note deleted" });
       }
     }
   );
