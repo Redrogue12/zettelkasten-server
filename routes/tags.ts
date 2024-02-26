@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../db");
 
 router.get("/tags", async (req: Request, res: Response) => {
-  db.query("SELECT * FROM tags", (err: any, results: any) => {
+  req.pool.query("SELECT * FROM tags", (err: any, results: any) => {
     if (err) {
       console.error(err);
       res
@@ -17,10 +17,12 @@ router.get("/tags", async (req: Request, res: Response) => {
 
 router.post("/tags", async (req, res) => {
   const { tag_name } = req.body;
-  console.log("req.body:", req.body);
-
+  if (!tag_name) {
+    res.status(400).json({ message: "Tag name is required" });
+    return;
+  }
   try {
-    const result = await db.query(
+    const result = await req.pool.query(
       "INSERT INTO tags (tag_name) VALUES ($1) RETURNING *",
       [tag_name]
     );
