@@ -1,9 +1,9 @@
 // links.js
-const express = require("express");
+import express, { Request, Response } from "express";
 const router = express.Router();
 
 // Endpoint to create a link between two notes
-router.post("/links", async (req, res) => {
+router.post("/links", async (req: Request, res: Response) => {
   const { id1, id2 } = req.body;
 
   try {
@@ -19,7 +19,7 @@ router.post("/links", async (req, res) => {
 });
 
 // Endpoint to delete a link between two notes
-router.delete("/links", async (req, res) => {
+router.delete("/links", async (req: Request, res: Response) => {
   const { id1, id2 } = req.query;
 
   if (!id1 || !id2) {
@@ -58,4 +58,4 @@ router.get("/links/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

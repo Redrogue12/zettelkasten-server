@@ -1,8 +1,8 @@
-// routes.js
-const express = require("express");
+import express, { Request, Response } from "express";
+
 const router = express.Router();
 
-router.get("/notes", (req, res) => {
+router.get("/notes", (req: Request, res: Response) => {
   req.pool.query("SELECT * FROM notes", (err, results) => {
     if (err) {
       console.error(err);
@@ -15,7 +15,7 @@ router.get("/notes", (req, res) => {
   });
 });
 
-router.get("/notes/:id", (req, res) => {
+router.get("/notes/:id", (req: Request, res: Response) => {
   req.pool.query(
     "SELECT * FROM notes WHERE id = $1",
     [req.params.id],
@@ -34,7 +34,7 @@ router.get("/notes/:id", (req, res) => {
   );
 });
 
-router.post("/notes", async (req, res) => {
+router.post("/notes", async (req: Request, res: Response) => {
   const { note_text, note_title } = req.body;
 
   try {
@@ -49,7 +49,7 @@ router.post("/notes", async (req, res) => {
   }
 });
 
-router.put("/notes/:id", async (req, res) => {
+router.put("/notes/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { note_text, note_title } = req.body;
 
@@ -70,7 +70,7 @@ router.put("/notes/:id", async (req, res) => {
   }
 });
 
-router.delete("/notes/:id", (req, res) => {
+router.delete("/notes/:id", (req: Request, res: Response) => {
   req.pool.query(
     "DELETE FROM notes WHERE id = $1",
     [req.params.id],
@@ -89,4 +89,4 @@ router.delete("/notes/:id", (req, res) => {
   );
 });
 
-module.exports = router;
+export default router;
