@@ -50,7 +50,6 @@ router.get("/links/:id", async (req, res) => {
       "SELECT n.* FROM notes n INNER JOIN note_links nl ON n.id = nl.to_note_id WHERE nl.from_note_id = $1",
       [id]
     );
-    // "SELECT * FROM note_links WHERE from_note_id = $1 OR to_note_id = $1",
     res.json(result.rows);
   } catch (err) {
     console.error(err);
