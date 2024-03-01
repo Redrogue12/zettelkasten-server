@@ -36,6 +36,7 @@ router.post("/tags", async (req, res) => {
 router.put("/tags/:id", async (req, res) => {
   const { id } = req.params;
   const { tag_name } = req.body;
+  console.log("tag_name:", tag_name);
 
   if (!tag_name) {
     res.status(400).json({ message: "Tag name is required" });
@@ -46,6 +47,7 @@ router.put("/tags/:id", async (req, res) => {
       "UPDATE tags SET tag_name = $1 WHERE tag_id = $2 RETURNING *",
       [tag_name, id]
     );
+    console.log("success", result);
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err);

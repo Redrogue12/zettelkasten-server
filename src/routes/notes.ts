@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
+import authenticate from "../middleware/authenticate";
 
 const router = express.Router();
 
-router.get("/notes", async (req: Request, res: Response) => {
+router.get("/notes", authenticate, async (req: Request, res: Response) => {
   try {
     const notesResult = await req.pool.query("SELECT * FROM notes");
 
@@ -30,7 +31,7 @@ router.get("/notes", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/notes/:id", (req: Request, res: Response) => {
+router.get("/notes/:id", authenticate, (req: Request, res: Response) => {
   req.pool.query(
     "SELECT * FROM notes WHERE id = $1",
     [req.params.id],
@@ -49,7 +50,7 @@ router.get("/notes/:id", (req: Request, res: Response) => {
   );
 });
 
-router.post("/notes", async (req: Request, res: Response) => {
+router.post("/notes", authenticate, async (req: Request, res: Response) => {
   const { note_text, note_title } = req.body;
 
   try {
@@ -64,7 +65,7 @@ router.post("/notes", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/notes/:id", async (req: Request, res: Response) => {
+router.put("/notes/:id", authenticate, async (req: Request, res: Response) => {
   const { id } = req.params;
   const { note_text, note_title } = req.body;
 
@@ -85,7 +86,7 @@ router.put("/notes/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/notes/:id", (req: Request, res: Response) => {
+router.delete("/notes/:id", authenticate, (req: Request, res: Response) => {
   req.pool.query(
     "DELETE FROM notes WHERE id = $1",
     [req.params.id],

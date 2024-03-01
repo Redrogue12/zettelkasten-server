@@ -1,11 +1,12 @@
-/// <reference path="./types/db-interfaces.d.ts" />
+/// <reference path="./src/types/db-interfaces.d.ts" />
 import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 dotenv.config();
-import notes from "./routes/notes";
-import tags from "./routes/tags";
-import links from "./routes/links";
-import pool from "./db";
+import notes from "./src/routes/notes";
+import tags from "./src/routes/tags";
+import links from "./src/routes/links";
+import users from "./src/routes/users";
+import pool from "./src/db";
 import cors from "cors";
 
 const app = express();
@@ -29,6 +30,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use("/", notes);
 app.use("/", tags);
 app.use("/", links);
+app.use("/", users);
 
 const server = app.listen(3000, () => {
   console.log("Server is running on port 3000");
