@@ -2,17 +2,32 @@ import express, { Request, Response } from "express";
 
 const router = express.Router();
 
-router.get("/notes", (req: Request, res: Response) => {
-  req.pool.query("SELECT * FROM notes", (err, results) => {
-    if (err) {
-      console.error(err);
-      res
-        .status(500)
-        .json({ message: "An error occurred while retrieving notes" });
-    } else {
-      res.json(results.rows);
-    }
-  });
+router.get("/notes", async (req: Request, res: Response) => {
+  try {
+    const notesResult = await req.pool.query("SELECT * FROM notes");
+
+    const notes = await Promise.all(
+      notesResult.rows.map(async (note) => {
+        const tagsResult = await req.pool.query(
+          "SELECT t.* FROM tags t INNER JOIN notes_tags nt ON nt.tag_id = t.tag_id WHERE nt.id = $1",
+          [note.id]
+        );
+
+        return {
+          ...note,
+          tags:
+            tagsResult.rows.length > 0 ? tagsResult.rows.map((row) => row) : [],
+        };
+      })
+    );
+
+    res.json(notes);
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving notes" });
+  }
 });
 
 router.get("/notes/:id", (req: Request, res: Response) => {
