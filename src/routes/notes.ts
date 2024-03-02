@@ -16,8 +16,8 @@ router.get("/notes/:id", authenticate, async (req: Request, res: Response) => {
     const notes = await Promise.all(
       notesResult.rows.map(async (note) => {
         const tagsResult = await req.pool.query(
-          "SELECT t.* FROM tags t INNER JOIN notes_tags nt ON nt.tag_id = t.tag_id WHERE nt.id = $1",
-          [note.id]
+          "SELECT t.* FROM tags t INNER JOIN notes_tags nt ON nt.tag_id = t.tag_id WHERE nt.note_id = $1",
+          [note.note_id]
         );
 
         return {
@@ -39,7 +39,7 @@ router.get("/notes/:id", authenticate, async (req: Request, res: Response) => {
 
 router.get("/notes/:id", authenticate, (req: Request, res: Response) => {
   req.pool.query(
-    "SELECT * FROM notes WHERE id = $1",
+    "SELECT * FROM notes WHERE note_id = $1",
     [req.params.id],
     (err, results) => {
       if (err) {
@@ -78,7 +78,7 @@ router.put("/notes/:id", authenticate, async (req: Request, res: Response) => {
 
   try {
     const result = await req.pool.query(
-      "UPDATE notes SET note_title = $1, note_text = $2 WHERE id = $3 RETURNING *",
+      "UPDATE notes SET note_title = $1, note_text = $2 WHERE note_id = $3 RETURNING *",
       [note_title, note_text, id]
     );
 
@@ -95,7 +95,7 @@ router.put("/notes/:id", authenticate, async (req: Request, res: Response) => {
 
 router.delete("/notes/:id", authenticate, (req: Request, res: Response) => {
   req.pool.query(
-    "DELETE FROM notes WHERE id = $1",
+    "DELETE FROM notes WHERE note_id = $1",
     [req.params.id],
     (err, results) => {
       if (err) {

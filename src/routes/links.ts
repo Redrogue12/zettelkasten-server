@@ -47,7 +47,7 @@ router.get("/links/:id", async (req, res) => {
 
   try {
     const result = await req.pool.query(
-      "SELECT n.* FROM notes n INNER JOIN note_links nl ON n.id = nl.to_note_id WHERE nl.from_note_id = $1",
+      "SELECT n.* FROM notes n INNER JOIN note_links nl ON n.note_id = nl.to_note_id WHERE nl.from_note_id = $1",
       [id]
     );
     res.json(result.rows);
