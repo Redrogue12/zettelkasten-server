@@ -2,17 +2,23 @@ import express, { Request, Response } from "express";
 const router = express.Router();
 const db = require("../db");
 
-router.get("/tags", async (req: Request, res: Response) => {
-  req.pool.query("SELECT * FROM tags", (err: any, results: any) => {
-    if (err) {
-      console.error(err);
-      res
-        .status(500)
-        .json({ message: "An error occurred while retrieving tags" });
-    } else {
-      res.json(results.rows);
+router.get("/tags/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id) res.status(400).json({ message: "User ID is required" });
+  req.pool.query(
+    "SELECT * FROM tags WHERE user_id = $1",
+    [id],
+    (err: any, results: any) => {
+      if (err) {
+        console.error(err);
+        res
+          .status(500)
+          .json({ message: "An error occurred while retrieving tags" });
+      } else {
+        res.json(results.rows);
+      }
     }
-  });
+  );
 });
 
 router.post("/tags", async (req, res) => {

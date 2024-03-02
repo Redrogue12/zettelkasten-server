@@ -3,10 +3,16 @@ import authenticate from "../middleware/authenticate";
 
 const router = express.Router();
 
-router.get("/notes", authenticate, async (req: Request, res: Response) => {
+router.get("/notes/:id", authenticate, async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id) res.status(400).json({ message: "User ID is required" });
   try {
-    const notesResult = await req.pool.query("SELECT * FROM notes");
+    const notesResult = await req.pool.query(
+      "SELECT * FROM notes WHERE user_id = $1",
+      [id]
+    );
 
+    console.log("notesResult:", notesResult);
     const notes = await Promise.all(
       notesResult.rows.map(async (note) => {
         const tagsResult = await req.pool.query(
@@ -50,13 +56,14 @@ router.get("/notes/:id", authenticate, (req: Request, res: Response) => {
   );
 });
 
-router.post("/notes", authenticate, async (req: Request, res: Response) => {
+router.post("/notes/:id", authenticate, async (req: Request, res: Response) => {
   const { note_text, note_title } = req.body;
+  const { id } = req.params;
 
   try {
     const result = await req.pool.query(
-      "INSERT INTO notes (note_title, note_text) VALUES ($1, $2) RETURNING *",
-      [note_title, note_text]
+      "INSERT INTO notes (note_title, note_text, user_id) VALUES ($1, $2, $3) RETURNING *",
+      [note_title, note_text, id]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
