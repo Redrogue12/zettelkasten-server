@@ -12,7 +12,17 @@ import cors from "cors";
 const app = express();
 
 // Enable CORS for all routes
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:8080",
+      "https://zettelkasten-frontend.vercel.app/",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use(express.json()); // for parsing application/json
 
