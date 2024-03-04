@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.ts",
-    "test": "NODE_ENV=test jest --detectOpenHandles"
+    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
