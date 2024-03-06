@@ -62,8 +62,10 @@ app.use("/", links);
 app.use("/", users);
 
 const server = http.createServer(app);
+const port = Number(process.env.SERVER_PORT) || 10000;
+const host = process.env.SERVER_HOSTNAME || "0.0.0.0";
 
-server.listen(process.env.SERVER_PORT, () => {
+server.listen(port, host, () => {
   console.log(`Server is running on port ${process.env.SERVER_PORT}`);
 });
 

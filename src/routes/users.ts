@@ -23,7 +23,6 @@ router.post("/validate", async (req: Request, res: Response) => {
 
 router.post("/signup", async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
-  console.log("req.body:", req.body);
 
   if (!username || !email || !password) {
     res
