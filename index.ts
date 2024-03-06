@@ -1,4 +1,5 @@
 /// <reference path="./src/types/db-interfaces.d.ts" />
+import http from "http";
 import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -60,7 +61,9 @@ app.use("/", tags);
 app.use("/", links);
 app.use("/", users);
 
-const server = app.listen(process.env.SERVER_PORT, () => {
+const server = http.createServer(app);
+
+server.listen(process.env.SERVER_PORT, () => {
   console.log(`Server is running on port ${process.env.SERVER_PORT}`);
 });
 
