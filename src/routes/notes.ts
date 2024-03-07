@@ -16,7 +16,7 @@ router.get("/notes/:id", authenticate, async (req: Request, res: Response) => {
     const notes = await Promise.all(
       notesResult.rows.map(async (note) => {
         const tagsResult = await req.pool.query(
-          "SELECT t.* FROM tags t INNER JOIN notes_tags nt ON nt.tag_id = t.tag_id WHERE nt.note_id = $1",
+          "SELECT t.* FROM tags t INNER JOIN note_tags nt ON nt.tag_id = t.tag_id WHERE nt.note_id = $1",
           [note.note_id]
         );
 
