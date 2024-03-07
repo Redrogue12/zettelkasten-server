@@ -13,49 +13,22 @@ import morgan from "morgan";
 
 const app = express();
 
-// Enable CORS for all routes
 app.use(cors());
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:8080",
-//       "https://zettelkasten-frontend.vercel.app/",
-//     ],
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//     credentials: true,
-//   })
-// );
 
-// const allowCors = (req: Request, res: Response, next: NextFunction) => {
-//   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, PUT, DELETE, OPTIONS"
-//   );
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   if (req.method === "OPTIONS") {
-//     res.status(200).end();
-//     return;
-//   }
-//   next();
-// };
-
-app.use(express.json()); // for parsing application/json
+app.use(express.json());
 
 app.use(morgan("dev"));
 
-// Make pool accessible to our router
 app.use((req: Request, res: Response, next: NextFunction) => {
   req.pool = pool;
   if (!req.pool) {
+    console.error("Database connection not available");
     res.status(500).json({ message: "Database connection not available" });
     return;
   }
   next();
 });
 
-// Use the routes
 app.use("/", notes);
 app.use("/", tags);
 app.use("/", links);
