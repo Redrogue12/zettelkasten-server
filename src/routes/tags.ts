@@ -22,6 +22,7 @@ router.get("/tags/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/tags/:id", async (req, res) => {
+  console.log("/tags/id endpoint");
   const { tag_name } = req.body;
   const { id } = req.params;
   if (!tag_name || !id) {
@@ -84,6 +85,7 @@ router.delete("/tags/:id", async (req, res) => {
 
 // create endpoint to associate a tag with a note
 router.post("/tags/link", async (req, res) => {
+  console.log("/tags/link endpoint");
   const { note_id, tag_id } = req.body;
   if (!note_id || !tag_id) {
     console.error(
