@@ -21,16 +21,17 @@ router.get("/tags/:id", async (req: Request, res: Response) => {
   );
 });
 
-router.post("/tags", async (req, res) => {
+router.post("/tags/:id", async (req, res) => {
   const { tag_name } = req.body;
-  if (!tag_name) {
-    res.status(400).json({ message: "Tag name is required" });
+  const { id } = req.params;
+  if (!tag_name || !id) {
+    res.status(400).json({ message: "Tag name and user id is required" });
     return;
   }
   try {
     const result = await req.pool.query(
-      "INSERT INTO tags (tag_name) VALUES ($1) RETURNING *",
-      [tag_name]
+      "INSERT INTO tags (tag_name, user_id) VALUES ($1, $2) RETURNING *",
+      [tag_name, id]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
