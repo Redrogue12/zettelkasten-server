@@ -43,8 +43,10 @@ router.post("/tags/:id", async (req, res) => {
 router.put("/tags/:id", async (req, res) => {
   const { id } = req.params;
   const { tag_name } = req.body;
-  console.log("tag_name:", tag_name);
-
+  if (!id) {
+    res.status(400).json({ message: "Tag ID is required" });
+    return;
+  }
   if (!tag_name) {
     res.status(400).json({ message: "Tag name is required" });
     return;
@@ -83,6 +85,10 @@ router.delete("/tags/:id", async (req, res) => {
 // create endpoint to associate a tag with a note
 router.post("/tags/link", async (req, res) => {
   const { note_id, tag_id } = req.body;
+  if (!note_id || !tag_id) {
+    res.status(400).json({ message: "Note ID and Tag ID are required" });
+    return;
+  }
   try {
     const result = await req.pool.query(
       "INSERT INTO notes_tags (note_id, tag_id) VALUES ($1, $2) RETURNING *",
