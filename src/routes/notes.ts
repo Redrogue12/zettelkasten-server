@@ -12,7 +12,6 @@ router.get("/notes/:id", authenticate, async (req: Request, res: Response) => {
       [id]
     );
 
-    console.log("notesResult:", notesResult);
     const notes = await Promise.all(
       notesResult.rows.map(async (note) => {
         const tagsResult = await req.pool.query(
