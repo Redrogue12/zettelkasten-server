@@ -86,6 +86,11 @@ router.delete("/tags/:id", async (req, res) => {
 router.post("/tags/link", async (req, res) => {
   const { note_id, tag_id } = req.body;
   if (!note_id || !tag_id) {
+    console.error(
+      "Note ID and Tag ID are required in /tags/link endpoint",
+      note_id,
+      tag_id
+    );
     res.status(400).json({ message: "Note ID and Tag ID are required" });
     return;
   }
