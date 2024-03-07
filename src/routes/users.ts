@@ -66,35 +66,40 @@ router.post("/login", async (req: Request, res: Response) => {
     return;
   }
 
-  const { rows } = await req.pool.query(
-    "SELECT * FROM users WHERE email = $1",
-    [email]
-  );
+  try {
+    const { rows } = await req.pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
 
-  const user = rows[0];
+    const user = rows[0];
 
-  if (!user) {
-    res.status(401).json({ message: "Invalid email or password" });
-    return;
+    if (!user) {
+      res.status(401).json({ message: "Invalid email or password" });
+      return;
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+
+    if (!passwordMatch) {
+      res.status(401).json({ message: "Invalid email or password" });
+      return;
+    }
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+      res.status(500).json({ message: "JWT_SECRET is not defined" });
+      return;
+    }
+
+    const token = jwt.sign({ userId: user.user_id }, secret);
+
+    delete user.password_hash;
+    res.json({ user, token });
+  } catch (err) {
+    console.log("err:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
-
-  const passwordMatch = await bcrypt.compare(password, user.password_hash);
-
-  if (!passwordMatch) {
-    res.status(401).json({ message: "Invalid email or password" });
-    return;
-  }
-  const secret = process.env.JWT_SECRET;
-
-  if (!secret) {
-    res.status(500).json({ message: "JWT_SECRET is not defined" });
-    return;
-  }
-
-  const token = jwt.sign({ userId: user.user_id }, secret);
-
-  delete user.password_hash;
-  res.json({ user, token });
 });
 
 export default router;
