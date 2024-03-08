@@ -21,7 +21,7 @@ router.get("/tags/:id", async (req: Request, res: Response) => {
   );
 });
 
-router.post("/tags/:id", async (req, res) => {
+router.post("/tags/id/:id", async (req, res) => {
   console.log("/tags/id endpoint");
   const { tag_name } = req.body;
   const { id } = req.params;
