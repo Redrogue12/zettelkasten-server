@@ -35,7 +35,7 @@ router.post("/signup", async (req: Request, res: Response) => {
 
   try {
     const response = await req.pool.query(
-      "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING username, email, password_hash",
+      "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING username, email, user_id",
       [username, email, hashedPassword]
     );
 
@@ -50,7 +50,6 @@ router.post("/signup", async (req: Request, res: Response) => {
     const secret: any = process.env.JWT_SECRET;
     const token = jwt.sign({ userId: user?.user_id }, secret);
 
-    delete user.password_hash;
     res.status(201).json({ user, token });
   } catch (err) {
     console.error(err);
