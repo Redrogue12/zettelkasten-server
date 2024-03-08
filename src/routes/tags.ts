@@ -98,7 +98,7 @@ router.post("/tags/link", async (req, res) => {
   }
   try {
     const result = await req.pool.query(
-      "INSERT INTO notes_tags (note_id, tag_id) VALUES ($1, $2) RETURNING *",
+      "INSERT INTO note_tags (note_id, tag_id) VALUES ($1, $2) RETURNING *",
       [note_id, tag_id]
     );
     res.status(201).json(result.rows[0]);
