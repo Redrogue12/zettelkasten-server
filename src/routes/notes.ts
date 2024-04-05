@@ -68,7 +68,7 @@ router.post("/notes/:id", authenticate, async (req: Request, res: Response) => {
 
   try {
     const result = await req.pool.query(
-      "INSERT INTO notes (note_title, note_text, note_reference, user_id) VALUES ($1, $2, $3) RETURNING *",
+      "INSERT INTO notes (note_title, note_text, note_reference, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [note_title, note_text, note_reference || "", id]
     );
     res.status(201).json(result.rows[0]);
