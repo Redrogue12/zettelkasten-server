@@ -59,7 +59,7 @@ router.post("/notes/:id", authenticate, async (req: Request, res: Response) => {
   const { note_text, note_title, note_reference } = req.body;
   const { id } = req.params;
 
-  if (!note_text || !note_title || !note_reference) {
+  if (!note_text || !note_title) {
     res
       .status(400)
       .json({ message: "Note text, title, and reference are required" });
@@ -69,7 +69,7 @@ router.post("/notes/:id", authenticate, async (req: Request, res: Response) => {
   try {
     const result = await req.pool.query(
       "INSERT INTO notes (note_title, note_text, note_reference, user_id) VALUES ($1, $2, $3) RETURNING *",
-      [note_title, note_text, note_reference, id]
+      [note_title, note_text, note_reference || "", id]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -82,7 +82,7 @@ router.put("/notes/:id", authenticate, async (req: Request, res: Response) => {
   const { id } = req.params;
   const { note_text, note_title, note_reference } = req.body;
 
-  if (!note_text || !note_title || !note_reference) {
+  if (!note_text || !note_title) {
     res
       .status(400)
       .json({ message: "Note text, title, and reference are required" });
@@ -92,7 +92,7 @@ router.put("/notes/:id", authenticate, async (req: Request, res: Response) => {
   try {
     const result = await req.pool.query(
       "UPDATE notes SET note_title = $1, note_text = $2, note_reference = $3 WHERE note_id = $4 RETURNING *",
-      [note_title, note_text, note_reference, id]
+      [note_title, note_text, note_reference || "", id]
     );
 
     if (result.rows.length > 0) {
