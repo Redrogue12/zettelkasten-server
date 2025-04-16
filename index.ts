@@ -39,7 +39,7 @@ const port = Number(process.env.SERVER_PORT) || 10000;
 const host = process.env.SERVER_HOSTNAME || "0.0.0.0";
 
 server.listen(port, host, () => {
-  console.log(`Server is running on port ${process.env.SERVER_PORT}`);
+  console.log(`Server is running on port ${port}`);
 });
 
 module.exports = server;
